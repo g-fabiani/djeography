@@ -105,7 +105,7 @@ class EntityDetailView(DetailView):
         else:
             queryset = self.model.published_objects.all()
         return queryset.prefetch_related(Prefetch('report_set',
-                                         queryset=Report.objects.filter().order_by('-date_added')))
+                                         queryset=Report.objects.order_by('-date_added')))
 
 
 class EntityPublishView(LoginRequiredMixin, View):
@@ -151,6 +151,7 @@ class MapView(TemplateView):
 
     @xframe_options_sameorigin
     def render_to_response(self, context, **response_kwargs):
+        """Allow the view to be embedded in pages of the same site"""
         return super().render_to_response(context, **response_kwargs)
 
 
