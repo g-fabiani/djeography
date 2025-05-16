@@ -25,6 +25,8 @@ class ReportInline(admin.StackedInline):
 class EntityAdmin(admin.ModelAdmin):
     model = Entity
 
+    change_form_template = 'map/change_form.html'
+
     # List view
     list_display = ["title", "category", "evaluation", "published"]
     list_filter = ["category", "published", "evaluation"]
