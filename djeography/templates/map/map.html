@@ -80,9 +80,11 @@
     window.addEventListener("map:init", function(e) {
       const map = e.detail.map;
       const layerControl = L.control.layers().addTo(map);
+      const geocoder = L.Control.Geocoder.photon()
       L.Control.geocoder({
         defaultMarkGeocode:false,
-        position: "topleft"
+        position: "topleft",
+        geocoder: geocoder
       })
       .on('markgeocode', (e) => {
         map.fitBounds(e.geocode.bbox);
