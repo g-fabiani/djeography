@@ -1,0 +1,2 @@
+recursive-include djeography/static *
+recursive-include djeography/templates *

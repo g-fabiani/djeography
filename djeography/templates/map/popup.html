@@ -1,0 +1,35 @@
+  {% with entity=address.entity %}
+<h4><a href="{{ entity.get_absolute_url }}">{{ entity.title }} ({{ entity.category }})</a></h4>
+<p>{% if address.road %}{{ address.road|title }},{% if address.number %} {{ address.number }},{% endif %}{% endif %} {{ address.city|title }} ({{ address.province }})</p>
+{% with contacts=entity.contact_set.all %}
+{% if contacts %}
+<ul class="mb-3 contact">
+  {% for contact in contacts %}
+    {% if contact.typology == "P" %}
+      <li>
+        <a href="tel:{{ contact.contact|cut:' '|cut:'-' }}">
+        {{ contact.contact }}</a>
+      </li>
+    {% elif contact.typology == "E" %}
+      <li>
+        <a href="mailto:{{ contact.contact }}">
+        {{ contact.contact }}</a>
+      </li>
+    {% else %}
+      <li>
+        <a href="{{ contact.contact }}">
+        {{ contact.contact }}</a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+{% if entity.description %}<div>{{ entity.description | safe }}</div>{% endif %}
+{% if address.entity_latest_update %}
+<p>Testimonianza più recente:
+  <time datetime="{{ address.entity_latest_update | date:'c' }}">{{ address.entity_latest_update|date:'j F Y' }}</time>
+  <a href="{{ entity.get_absolute_url }}">Leggi ({{ address.entity_n_reports }})</a>
+</p>
+{% endif %}
+{% endwith %}

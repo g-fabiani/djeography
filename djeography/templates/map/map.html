@@ -1,0 +1,74 @@
+{% load leaflet_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  {% leaflet_js plugins="awesome-markers" %}
+  {% leaflet_css plugins="awesome-markers" %}
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    const colorMap = {
+      'R': 'red',
+      'Y': 'orange',
+      'G': 'green'
+    }
+    const dataurls = [
+    {% for cat in categories %}"{% url 'data' cat.slug %}", {% endfor %}
+    ];
+    const map = L.map('map').setView([42, 12], 6);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    dataurls.map(url => addMarkers(url));
+
+    function createPopup(feature) {
+      el = document.createElement('div');
+      fetch(`/map/popup/${feature.id}/`)
+      .then(response => response.text())
+      .then(html => {
+        el.innerHTML = html;
+      })
+      .catch(error => {
+        console.error('Create Popup:', error);
+      });
+      return el;
+    }
+
+    function addMarkers(url) {
+      fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        L.geoJSON(data, {
+          pointToLayer: (feature, latlng) => {
+            const icon = L.AwesomeMarkers.icon({
+              icon: feature.properties.icon,
+              prefix: 'fa',
+              markerColor: feature.properties.evaluation ? colorMap[feature.properties.evaluation] : 'gray'
+            });
+            return L.marker(latlng, {icon: icon})
+            .bindPopup(() => createPopup(feature), {minWidth: 250});
+          }
+        }).addTo(map);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+    }
+
+  </script>
+</body>
+</html>
