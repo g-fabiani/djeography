@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponseRedirect
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 
 from . models import Entity, Category, Address, Report
 from . utils import PROV_CHOICES
@@ -147,6 +148,10 @@ class MapView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         return context
+
+    @xframe_options_sameorigin
+    def render_to_response(self, context, **response_kwargs):
+        return super().render_to_response(context, **response_kwargs)
 
 
 class PopupView(DetailView):
