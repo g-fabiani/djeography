@@ -1,6 +1,3 @@
-from django.utils.html import escape
-from django.template.defaultfilters import date
-
 PROV_CHOICES = [('AG', 'Agrigento'),
                 ('AL', 'Alessandria'),
                 ('AN', 'Ancona'),
@@ -108,20 +105,3 @@ PROV_CHOICES = [('AG', 'Agrigento'),
                 ('VV', 'Vibo Valentia'),
                 ('VI', 'Vicenza'),
                 ('VT', 'Viterbo')]
-
-
-def tagger_factory(opening_tag, closing_tag=None):
-    if closing_tag is None:
-        closing_tag = opening_tag.replace("<", "</")
-
-    def inner(a_string):
-        return opening_tag + a_string + closing_tag
-
-    return inner
-
-
-ul = tagger_factory("<ul>")
-li = tagger_factory("<li>")
-h4 = tagger_factory("<h4>")
-paragraph = tagger_factory("<p>")
-h5_div = tagger_factory("<div class='h5'>", "</div>")
