@@ -1,0 +1,79 @@
+  {% load leaflet_tags %}
+  {% leaflet_map "map" %}
+  <script>
+    const colorMap = {
+      'NEG': 'red',
+      'MIX': 'orange',
+      'POS': 'green',
+      'default': 'gray'
+    }
+
+    const categories = [
+    {% for cat in categories %}
+    {'cat': "{{ cat.name }}", 'url': "{% url 'data' cat.slug %}"},{% endfor %}
+    ];
+
+    const clusterRadius = 30;
+
+    function createPopup(feature) {
+      el = document.createElement('div');
+      fetch(`/map/popup/${feature.id}/`)
+      .then(response => response.text())
+      .then(html => {
+        el.innerHTML = html;
+      })
+      .catch(error => {
+        console.error('Create Popup:', error);
+      });
+      return el;
+    }
+
+    function addMarkers(cat,url, markers, layerControl, map) {
+      const categorySubGroup = L.featureGroup.subGroup(markers);
+      layerControl.addOverlay(categorySubGroup, cat)
+      fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        const layerGroup = L.geoJSON(data, {
+          pointToLayer: (feature, latlng) => {
+            const icon = L.BeautifyIcon.icon({
+              icon: feature.properties.icon,
+              iconShape: "marker",
+              prefix: 'fa',
+              borderColor: "white",
+              backgroundColor: feature.properties.evaluation ?
+              colorMap[feature.properties.evaluation] :
+              colorMap['default'],
+              textColor: "white"
+            });
+            return L.marker(latlng, {icon: icon})
+            .bindPopup(() => createPopup(feature), {minWidth: 250});
+          }
+        }).addTo(categorySubGroup);
+        categorySubGroup.addTo(map);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+    }
+
+    window.addEventListener("map:init", function(e) {
+      const map = e.detail.map;
+      const markers = L.markerClusterGroup({
+        maxClusterRadius: clusterRadius,
+      }).addTo(map);
+      const layerControl = L.control.layers().addTo(map);
+      const geocoder = L.Control.Geocoder.photon()
+      L.Control.geocoder({
+        defaultMarkGeocode:false,
+        position: "topleft",
+        geocoder: geocoder
+      })
+      .on('markgeocode', (e) => {
+        map.fitBounds(e.geocode.bbox);
+      })
+      .addTo(map);
+
+      categories.map(({cat, url}) => addMarkers(cat, url, markers, layerControl, map));
+    })
+  </script>
