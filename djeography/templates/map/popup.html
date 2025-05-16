@@ -1,5 +1,5 @@
   {% with entity=address.entity %}
-<h4><a href="{{ entity.get_absolute_url }}">{{ entity.title }} ({{ entity.category }})</a></h4>
+<h4><a href="{{ entity.get_absolute_url }}" target="_blank" noopener noreferrer>{{ entity.title }} ({{ entity.category }})</a></h4>
 <p>{% if address.road %}{{ address.road|title }},{% if address.number %} {{ address.number }},{% endif %}{% endif %} {{ address.city|title }} ({{ address.province }})</p>
 {% with contacts=entity.contact_set.all %}
 {% if contacts %}
@@ -29,7 +29,7 @@
 {% if address.entity_latest_update %}
 <p>Testimonianza più recente:
   <time datetime="{{ address.entity_latest_update | date:'c' }}">{{ address.entity_latest_update|date:'j F Y' }}</time>
-  <a href="{{ entity.get_absolute_url }}">Leggi ({{ address.entity_n_reports }})</a>
+  <a href="{{ entity.get_absolute_url }}#reports" target="_blank" noopener noreferrer>Leggi ({{ address.entity_n_reports }})</a>
 </p>
 {% endif %}
 {% endwith %}
