@@ -179,7 +179,7 @@ class MapViewEmptyTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_map_view_url_location(self):
-        response = self.client.get('/map/')
+        response = self.client.get('/map/fullscreen/')
         self.assertEqual(response.status_code, 200)
 
     def test_map_view_template(self):
@@ -195,7 +195,7 @@ class MapViewPopulatedTest(EntityPopulatedTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_map_view_url_location(self):
-        response = self.client.get('/map/')
+        response = self.client.get('/map/fullscreen/')
         self.assertEqual(response.status_code, 200)
 
     def test_map_view_template(self):
