@@ -129,12 +129,15 @@ class GeoJSONLayerByCategoryView(GeoJSONLayerView):
     geometry_field = "coords"
 
     def get_queryset(self, **kwargs):
-        return self.model.objects.filter(
+        queryset =  self.model.objects.filter(
             entity__category__slug=self.kwargs["slug"]
             ).annotate(
                 icon=F('entity__category__icon'),
                 evaluation=F('entity__evaluation'),
                 )
+        if not self.request.user.is_authenticated:
+            return queryset.filter(entity__published=True)
+        return queryset
 
 
 class MapView(TemplateView):

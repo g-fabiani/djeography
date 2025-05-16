@@ -1,5 +1,6 @@
   {% with entity=address.entity %}
-<h4><a href="{{ entity.get_absolute_url }}" target="_blank" noopener noreferrer>{{ entity.title }} ({{ entity.category }})</a></h4>
+<h4><a href="{{ entity.get_absolute_url }}" target="_blank" noopener noreferrer>{% if not entity.published %}(Bozza){% endif %} {{ entity.title }}</a></h4>
+<p><strong>{{ entity.category }}</strong></p>
 <p>{% if address.road %}{{ address.road|title }},{% if address.number %} {{ address.number }},{% endif %}{% endif %} {{ address.city|title }} ({{ address.province }})</p>
 {% with contacts=entity.contact_set.all %}
 {% if contacts %}
