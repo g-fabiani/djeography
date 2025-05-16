@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  {% leaflet_js plugins="beautify-marker, control-geocoder" %}
-  {% leaflet_css plugins="beautify-marker, control-geocoder" %}
+  {% leaflet_css plugins="beautify-marker, control-geocoder, marker-cluster" %}
+  {% leaflet_js plugins="beautify-marker, control-geocoder, marker-cluster, featuregroup-subgroup" %}
+
   <style>
     html, body {
       width: 100%;
@@ -37,6 +38,8 @@
     {'cat': "{{ cat.name }}", 'url': "{% url 'data' cat.slug %}"},{% endfor %}
     ];
 
+    const clusterRadius = 30;
+
     function createPopup(feature) {
       el = document.createElement('div');
       fetch(`/map/popup/${feature.id}/`)
@@ -50,7 +53,9 @@
       return el;
     }
 
-    function addMarkers(cat,url, map, layerControl) {
+    function addMarkers(cat,url, markers, layerControl, map) {
+      const categorySubGroup = L.featureGroup.subGroup(markers);
+      layerControl.addOverlay(categorySubGroup, cat)
       fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -69,8 +74,8 @@
             return L.marker(latlng, {icon: icon})
             .bindPopup(() => createPopup(feature), {minWidth: 250});
           }
-        }).addTo(map);
-        layerControl.addOverlay(layerGroup, cat);
+        }).addTo(categorySubGroup);
+        categorySubGroup.addTo(map);
       })
       .catch((error) => {
         console.log(error);
@@ -79,6 +84,9 @@
 
     window.addEventListener("map:init", function(e) {
       const map = e.detail.map;
+      const markers = L.markerClusterGroup({
+        maxClusterRadius: clusterRadius,
+      }).addTo(map);
       const layerControl = L.control.layers().addTo(map);
       const geocoder = L.Control.Geocoder.photon()
       L.Control.geocoder({
@@ -91,7 +99,7 @@
       })
       .addTo(map);
 
-      categories.map(({cat, url}) => addMarkers(cat, url, map, layerControl));
+      categories.map(({cat, url}) => addMarkers(cat, url, markers, layerControl, map));
     })
   </script>
 </body>
