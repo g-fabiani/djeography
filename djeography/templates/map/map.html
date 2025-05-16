@@ -31,15 +31,19 @@
       'default': 'gray'
     }
 
-    const dataurls = [
-    {% for cat in categories %}"{% url 'data' cat.slug %}", {% endfor %}
+    const categories = [
+    {% for cat in categories %}
+    {'cat': "{{ cat.name }}", 'url': "{% url 'data' cat.slug %}"},{% endfor %}
     ];
+
     const map = L.map('map').setView([42, 12], 6);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    dataurls.map(url => addMarkers(url));
+    const layerControl = L.control.layers().addTo(map);
+
+    categories.map(({cat, url}) => addMarkers(cat, url));
 
     function createPopup(feature) {
       el = document.createElement('div');
@@ -54,11 +58,12 @@
       return el;
     }
 
-    function addMarkers(url) {
+    function addMarkers(cat,url) {
+      console.log(cat, url)
       fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        L.geoJSON(data, {
+        const layerGroup = L.geoJSON(data, {
           pointToLayer: (feature, latlng) => {
             const icon = L.BeautifyIcon.icon({
               icon: feature.properties.icon,
@@ -74,6 +79,7 @@
             .bindPopup(() => createPopup(feature), {minWidth: 250});
           }
         }).addTo(map);
+        layerControl.addOverlay(layerGroup, cat);
       })
       .catch((error) => {
         console.log(error);
