@@ -25,10 +25,12 @@
   <div id="map"></div>
   <script>
     const colorMap = {
-      'R': 'red',
-      'Y': 'orange',
-      'G': 'green'
+      'NEG': 'red',
+      'MIX': 'orange',
+      'POS': 'green',
+      'default': 'gray'
     }
+
     const dataurls = [
     {% for cat in categories %}"{% url 'data' cat.slug %}", {% endfor %}
     ];
@@ -63,7 +65,9 @@
               iconShape: "marker",
               prefix: 'fa',
               borderColor: "white",
-              backgroundColor: feature.properties.evaluation ? colorMap[feature.properties.evaluation] : 'gray',
+              backgroundColor: feature.properties.evaluation ?
+              colorMap[feature.properties.evaluation] :
+              colorMap['default'],
               textColor: "white"
             });
             return L.marker(latlng, {icon: icon})

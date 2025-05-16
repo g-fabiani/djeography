@@ -63,7 +63,7 @@ class Entity(models.Model):
     - indirizzi (0, N)
     """
 
-    EVAL_LEVEL = [('R', 'Negativa'), ('Y', 'Mista'), ('G', 'Positiva')]
+    EVAL_LEVEL = [('NEG', 'Negativa'), ('MIX', 'Mista'), ('POS', 'Positiva')]
 
     category = models.ForeignKey(Category,
                                  on_delete=models.RESTRICT,
@@ -73,7 +73,7 @@ class Entity(models.Model):
     description = models.TextField("info", null=True, blank=True)
     evaluation = models.CharField("valutazione",
                                   choices=EVAL_LEVEL,
-                                  max_length=1,
+                                  max_length=3,
                                   null=True,
                                   blank=True)
     published = models.BooleanField("pubblicata", default=False)
