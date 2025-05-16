@@ -5,6 +5,7 @@ from django.urls import reverse
 from .utils import PROV_CHOICES
 from django.db.models import Max, Count
 from djgeojson.fields import PointField
+from tinymce import models as tinymce_models
 
 
 class EntityManager(models.Manager):
@@ -70,7 +71,7 @@ class Entity(models.Model):
                                  verbose_name="categoria",
                                  null=False)
     title = models.CharField("titolo", max_length=60)
-    description = models.TextField("info", null=True, blank=True)
+    description = tinymce_models.HTMLField("info", null=True, blank=True)
     evaluation = models.CharField("valutazione",
                                   choices=EVAL_LEVEL,
                                   max_length=3,
@@ -157,7 +158,7 @@ class Report(models.Model):
 
     entity = models.ForeignKey(Entity, on_delete=models.CASCADE)
     title = models.CharField("titolo", max_length=100, null=False)
-    body = models.TextField("testo", null=True, blank=True)
+    body = tinymce_models.HTMLField("testo", null=True, blank=True)
     date_added = models.DateField("data", default=timezone.now)
 
     class Meta:
