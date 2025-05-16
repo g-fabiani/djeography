@@ -23,6 +23,7 @@
 </head>
 <body>
   <div id="map"></div>
+  {% leaflet_map "map" %}
   <script>
     const colorMap = {
       'NEG': 'red',
@@ -35,15 +36,6 @@
     {% for cat in categories %}
     {'cat': "{{ cat.name }}", 'url': "{% url 'data' cat.slug %}"},{% endfor %}
     ];
-
-    const map = L.map('map').setView([42, 12], 6);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-
-    const layerControl = L.control.layers().addTo(map);
-
-    categories.map(({cat, url}) => addMarkers(cat, url));
 
     function createPopup(feature) {
       el = document.createElement('div');
@@ -58,8 +50,7 @@
       return el;
     }
 
-    function addMarkers(cat,url) {
-      console.log(cat, url)
+    function addMarkers(cat,url, map, layerControl) {
       fetch(url)
       .then((response) => response.json())
       .then((data) => {
@@ -86,6 +77,12 @@
       })
     }
 
+    window.addEventListener("map:init", function(e) {
+      const map = e.detail.map;
+      const layerControl = L.control.layers().addTo(map);
+
+      categories.map(({cat, url}) => addMarkers(cat, url, map, layerControl));
+    })
   </script>
 </body>
 </html>
