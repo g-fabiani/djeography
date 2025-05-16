@@ -14,14 +14,14 @@ class EntityPopulatedTestCase(TestCase):
         self.entity = Entity.objects.create(
             category=self.cat,
             title="Test title",
-            evaluation="Y",
+            evaluation="MIX",
             description="Some description"
         )
 
         self.pub_entity = Entity.objects.create(
             category=self.cat,
             title="Second test title",
-            evaluation="G",
+            evaluation="POS",
             description="Some description",
             published=True
         )
@@ -33,7 +33,7 @@ class EntityModelTest(EntityPopulatedTestCase):
         self.assertEqual(f"{self.entity.title}", "Test title")
 
     def test_entity_evaluation(self):
-        self.assertEqual(f"{self.entity.evaluation}", "Y")
+        self.assertEqual(f"{self.entity.evaluation}", "MIX")
         self.assertEqual(f"{self.entity.get_evaluation_display()}", "Mista")
 
     def test_entity_description(self):
@@ -129,7 +129,7 @@ class EntityViewPopulatedTest(EntityPopulatedTestCase):
             Entity.objects.create(
             category=self.cat,
             title=f"Additional test entity {i}",
-            evaluation="G",
+            evaluation="POS",
             description="Some description",
             published=True)
         # check there are more than 6 published entities
