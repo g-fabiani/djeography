@@ -2,6 +2,7 @@ from django.test import TestCase
 from .models import Entity, Category, Contact, Address
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from djeography import EVAL_LEVELS
 
 # Create your tests here.
 
@@ -14,14 +15,14 @@ class EntityPopulatedTestCase(TestCase):
         self.entity = Entity.objects.create(
             category=self.cat,
             title="Test title",
-            evaluation="MIX",
+            evaluation=EVAL_LEVELS[0][0],
             description="Some description"
         )
 
         self.pub_entity = Entity.objects.create(
             category=self.cat,
             title="Second test title",
-            evaluation="POS",
+            evaluation=EVAL_LEVELS[1][0],
             description="Some description",
             published=True
         )
@@ -33,8 +34,8 @@ class EntityModelTest(EntityPopulatedTestCase):
         self.assertEqual(f"{self.entity.title}", "Test title")
 
     def test_entity_evaluation(self):
-        self.assertEqual(f"{self.entity.evaluation}", "MIX")
-        self.assertEqual(f"{self.entity.get_evaluation_display()}", "Mista")
+        self.assertEqual(f"{self.entity.evaluation}", EVAL_LEVELS[0][0])
+        self.assertEqual(f"{self.entity.get_evaluation_display()}", EVAL_LEVELS[0][1])
 
     def test_entity_description(self):
         self.assertEqual(self.entity.description, "Some description")
@@ -73,10 +74,10 @@ class EntityViewEmptyTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'map/list.html')
 
-    def test_entity_list_view_warning(self):
+    def test_entity_list_view_queryset(self):
         response = self.client.get(reverse('list'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'alert-warning')
+        self.assertQuerySetEqual(response.context['entities'], [])
 
     def test_entity_list_view_search(self):
         response = self.client.get(reverse('list'), {'search': 'test'})
@@ -99,8 +100,18 @@ class EntityViewPopulatedTest(EntityPopulatedTestCase):
     def test_entity_list_view_template(self):
         response = self.client.get(reverse('list'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'base.html')
         self.assertTemplateUsed(response, 'map/list.html')
+
+    def test_entity_list_view_queryset_unauth(self):
+        response = self.client.get(reverse('list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerySetEqual(response.context['entities'], [self.pub_entity])
+
+    def test_entity_list_view_queryset_auth(self):
+        self.client.login(username='test', password='test')
+        response = self.client.get(reverse('list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerySetEqual(response.context['entities'], [self.entity, self.pub_entity])
 
     def test_entity_list_view_published_entity_present(self):
         response = self.client.get(reverse('list'))
@@ -118,36 +129,16 @@ class EntityViewPopulatedTest(EntityPopulatedTestCase):
             response.content.decode()
         )
 
-    def test_entity_list_view_pagination_absent(self):
-        response = self.client.get(reverse('list'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateNotUsed(response, 'map/pagination.html')
-
-    def test_entity_list_view_pagination_present(self):
-        # Add some more published entities
-        for i in range(6):
-            Entity.objects.create(
-            category=self.cat,
-            title=f"Additional test entity {i}",
-            evaluation="POS",
-            description="Some description",
-            published=True)
-        # check there are more than 6 published entities
-        self.assertGreater(Entity.published_objects.count(), 6)
-
-        response = self.client.get(reverse('list'))
-        self.assertTemplateUsed(response, 'map/pagination.html')
-
     def test_entity_list_view_search_present(self):
         response = self.client.get(reverse('list'), {'search': 'test'})
         self.assertEqual(response.status_code, 200)
         # There is a entity in the search results
-        self.assertTemplateUsed(response, 'map/card_header.html')
+        self.assertQuerySetEqual(response.context['entities'], [self.pub_entity])
 
     def test_entity_list_view_search_absent(self):
         response = self.client.get(reverse('list'), {'search': 'zzz'})
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateNotUsed(response, 'map/card_header.html')
+        self.assertQuerySetEqual(response.context['entities'], [])
 
     def test_published_detail_view_by_name(self):
         response = self.client.get(self.pub_entity.get_absolute_url())
