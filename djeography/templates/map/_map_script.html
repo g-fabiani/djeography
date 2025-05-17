@@ -10,6 +10,14 @@
     ];
 
     const clusterRadius = 40;
+    const iconProps = {
+              iconShape: "marker",
+              prefix: 'fa',
+              borderColor: "white",
+              iconStyle: "width:36px;height:36px",
+              innerIconStyle: "margin-top:6px; margin-left:-3px;font-size:16px;",
+              textColor: "white"
+            };
 
     function createPopup(feature) {
       el = document.createElement('div');
@@ -32,18 +40,10 @@
       .then((data) => {
         const layerGroup = L.geoJSON(data, {
           pointToLayer: (feature, latlng) => {
-            const icon = L.BeautifyIcon.icon({
-              icon: feature.properties.icon,
-              iconShape: "marker",
-              prefix: 'fa',
-              borderColor: "white",
-              iconStyle: "width:36px;height:36px",
-              innerIconStyle: "margin-top:6px; margin-left:-3px;font-size:16px;",
-              backgroundColor: feature.properties.evaluation ?
-              colorMap[feature.properties.evaluation] :
-              colorMap['default'],
-              textColor: "white"
-            });
+            iconProps.icon = feature.properties.icon;
+            iconProps.backgroundColor = colorMap[feature.properties.evaluation]??
+                                            colorMap['default'];
+            const icon = L.BeautifyIcon.icon(iconProps);
             return L.marker(latlng, {icon: icon})
             .bindPopup(() => createPopup(feature), {minWidth: 250});
           }
@@ -68,7 +68,7 @@
         geocoder: geocoder
       })
       .on('markgeocode', (e) => {
-        map.fitBounds(e.geocode.bbox);
+        map.flyToBounds(e.geocode.bbox, {maxZoom: 16});
       })
       .addTo(map);
 
