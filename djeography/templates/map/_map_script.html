@@ -9,7 +9,7 @@
     {'cat': "{{ cat.name }}", 'url': "{% url 'data' cat.slug %}"},{% endfor %}
     ];
 
-    const clusterRadius = 30;
+    const clusterRadius = 40;
 
     function createPopup(feature) {
       el = document.createElement('div');
@@ -24,7 +24,7 @@
       return el;
     }
 
-    function addMarkers(cat,url, markers, layerControl, map) {
+    function addMarkers(cat, url, markers, layerControl, map) {
       const categorySubGroup = L.featureGroup.subGroup(markers);
       layerControl.addOverlay(categorySubGroup, cat)
       fetch(url)
@@ -37,6 +37,8 @@
               iconShape: "marker",
               prefix: 'fa',
               borderColor: "white",
+              iconStyle: "width:36px;height:36px",
+              innerIconStyle: "margin-top:6px; margin-left:-3px;font-size:16px;",
               backgroundColor: feature.properties.evaluation ?
               colorMap[feature.properties.evaluation] :
               colorMap['default'],
