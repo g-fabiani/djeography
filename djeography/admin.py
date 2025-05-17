@@ -10,7 +10,7 @@ from leaflet.admin import LeafletGeoAdminMixin
 
 class AddressInline(LeafletGeoAdminMixin, admin.StackedInline):
     model = Address
-    extra = 2
+    extra = 1
 
 class ContactInline(admin.TabularInline):
     model = Contact
