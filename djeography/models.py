@@ -3,9 +3,9 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.urls import reverse
 from .utils import PROV_CHOICES
-from django.db.models import Max, Count
 from djgeojson.fields import PointField
 from tinymce import models as tinymce_models
+from djeography import EVAL_LEVELS
 
 
 class EntityManager(models.Manager):
@@ -64,8 +64,6 @@ class Entity(models.Model):
     - indirizzi (0, N)
     """
 
-    EVAL_LEVEL = [('NEG', 'Negativa'), ('MIX', 'Mista'), ('POS', 'Positiva')]
-
     category = models.ForeignKey(Category,
                                  on_delete=models.RESTRICT,
                                  verbose_name="categoria",
@@ -73,7 +71,7 @@ class Entity(models.Model):
     title = models.CharField("titolo", max_length=60)
     description = tinymce_models.HTMLField("info", null=True, blank=True)
     evaluation = models.CharField("valutazione",
-                                  choices=EVAL_LEVEL,
+                                  choices=EVAL_LEVELS,
                                   max_length=3,
                                   null=True,
                                   blank=True)

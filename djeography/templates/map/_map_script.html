@@ -1,12 +1,8 @@
   {% load leaflet_tags %}
   {% leaflet_map "map" %}
+  {{ color_map | json_script:'colorMap' }}
   <script>
-    const colorMap = {
-      'NEG': 'red',
-      'MIX': 'orange',
-      'POS': 'green',
-      'default': 'gray'
-    }
+    const colorMap = JSON.parse(document.getElementById('colorMap').textContent)
 
     const categories = [
     {% for cat in categories %}

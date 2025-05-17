@@ -12,6 +12,7 @@ from django.views.decorators.clickjacking import xframe_options_sameorigin
 
 from . models import Entity, Category, Address, Report
 from . utils import PROV_CHOICES
+from djeography import app_settings, COLOR_MAP, EVAL_LEVELS
 
 
 
@@ -25,7 +26,7 @@ class EntityListView(ListView):
     model = Entity
     template_name = "map/list.html"
     context_object_name = "entities"
-    paginate_by = 4
+    paginate_by = app_settings['PAGINATION']
 
     def get_queryset(self) -> QuerySet[Any]:
         # Solo gli utenti autenticati possono vedere segnalazioni
@@ -75,7 +76,7 @@ class EntityListView(ListView):
         context["categories"] = { cat.slug: cat for cat in Category.objects.all()}
         context["evaluations"] = {evaluation: evaluation_string
                                   for evaluation, evaluation_string
-                                  in self.model.EVAL_LEVEL}
+                                  in EVAL_LEVELS}
         context["searching"] = self.searching
 
         return context
@@ -147,6 +148,7 @@ class MapView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
+        context["color_map"] = COLOR_MAP
         return context
 
     @xframe_options_sameorigin
