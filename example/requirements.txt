@@ -1,0 +1,2 @@
+Django>=5.2
+djeography @ git+https://github.com/g-fabiani/djeography

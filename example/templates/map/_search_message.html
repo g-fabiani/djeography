@@ -1,0 +1,13 @@
+{% load dictionary_extras %}
+segnalazioni
+{% with cat=request.GET.category prov=request.GET.province eval=request.GET.evaluation %}
+  {% if cat %}
+    nella categoria <strong>{% get_from_dict categories cat %}</strong>
+  {% endif %}
+  {% if prov %}
+    per la provincia di <strong>{% get_from_dict provinces prov %}</strong>
+  {% endif %}
+  {% if eval %}
+    con valutazione <strong>{% get_from_dict evaluations eval %}</strong>
+  {% endif %}
+{% endwith %}

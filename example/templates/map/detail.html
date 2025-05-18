@@ -1,0 +1,74 @@
+{% extends "_base.html" %}
+{% block nav_map %}
+  active
+{% endblock nav_map %}
+{% block nav_map_archive %}
+  active
+{% endblock nav_map_archive %}
+{% block content %}
+  <div class="row row-cols-1 mb-4">
+    <article class="card card-detail entity px-0 my-2 shadow-lg">
+      <!-- Card header -->
+      {% include "map/_card_header.html" %}
+      <!-- Card body -->
+      <div class="card-body">
+        <h1 class="fw-normal card-title entity-title mb-4">{{ entity.title }}</h1>
+        <div class="card-text">
+          <div class="px-0">
+            {% if entity.address_set.all %}
+              <h2>Indirizzi</h2>
+              {% include "map/_address.html" %}
+            {% endif %}
+          </div>
+          {% if entity.contact_set.all %}
+            <div class="px-0">
+              <h2>Contatti</h2>
+              {% include "map/_contacts.html" %}
+            </div>
+          {% endif %}
+          {% if entity.description %}
+            <hr>
+            <div class="px-0 mt-4">
+              <h2>Informazioni aggiuntive</h2>
+              {{ entity.description | safe }}
+            </div>
+          {% endif %}
+        </div>
+        {% if user.is_authenticated %}
+          <div class="d-flex justify-content-center mt-4">
+            {% if entity.published == False %}
+              <form action="{% url 'publish' entity.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Pubblica</button>
+              </form>
+            {% else %}
+              <form action="{% url 'unpublish' entity.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning">Nascondi</button>
+              </form>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </article>
+    {% if entity.report_set.all %}
+      <h2 id="reports" class="visually-hidden">Testimonianze</h2>
+      {% for report in entity.report_set.all %}
+        <article class="card">
+          <div class="card-body">
+            <h3 class="my-0 fw-normal card-title entity-title mb-4">{{ report.title }}</h3>
+            <div class="card-text">
+              {{ report.body | safe }}
+              <p class="text-muted">
+                <i class="bi bi-calendar-event" aria-hidden="true"></i>
+                <time datetime="{{ report.date_added | date:'c' }}">
+                  {{ report.date_added|date:'j F Y' }}
+                </time>
+              </p>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock content %}

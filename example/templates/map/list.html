@@ -1,0 +1,108 @@
+{% extends "_base.html" %}
+{% block content %}
+  {% if entities %}
+    {% if searching %}
+      <div class="alert alert-info mt-5 d-flex align-items-center" role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="24"
+             height="24"
+             fill="currentColor"
+             class="bi bi-info-circle-fill flex-shrink-0 me-2"
+             viewBox="0 0 16 16">
+          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+        </svg>
+        <div class="ms-3">
+          Hai cercato
+          {% if request.GET.search %}
+            <strong>“{{ request.GET.search }}”</strong>
+          {% else %}
+            {% include "map/_search_message.html" %}
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+    <div class="row row-cols-1 row-cols-md-2 mb-3">
+      {% for entity in entities %}
+        <div class="col">
+          <article class="card card-list entity-list entity px-0 my-2 shadow-lg">
+            <!-- Card header -->
+            {% include "map/_card_header.html" %}
+            <!-- Card body -->
+            <div class="card-body">
+              <h2 class="my-0 fw-normal card-title entity-title mb-4">
+                <a href="{{ entity.get_absolute_url }}"
+                   class="stretched-link">{{ entity.title }}</a>
+              </h2>
+              <div class="card-text">
+                <div class="px-0">
+                  {% if entity.address_set.all %}
+                    <h3>Indirizzi</h3>
+                    {% include "map/_address.html" %}
+                  {% endif %}
+                </div>
+                {% if entity.contact_set.all %}
+                  <div class="px-0">
+                    <h3>Contatti</h3>
+                    {% include "map/_contacts.html" %}
+                  </div>
+                {% endif %}
+                {% if entity.description %}
+                  <hr>
+                  <div class="px-0 mt-4">
+                    <h3 class="visually-hidden">Informazioni aggiuntive</h3>
+                    {{ entity.description | safe }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+              {% if entity.n_reports > 0 %}
+                <!-- Card footer -->
+                <div class="card-footer text-body-secondary">
+                  <small>Testimonianza più recente:
+                    <time datetime="{{ entity.latest_update | date:'c' }}">
+                      {{ entity.latest_update|date:'j F Y' }}
+                    </time>
+                    <a href="">Leggi ({{ entity.n_reports }})</a>
+                  </small>
+                </div>
+              {% endif %}
+          </article>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <!-- Mostra un messaggio se non sono state trovate segnalazioni -->
+    <div class="alert alert-warning mt-5 d-flex align-items-center"
+         role="alert">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="24"
+           height="24"
+           fill="currentColor"
+           class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
+           viewBox="0 0 16 16"
+           role="img"
+           aria-label="Warning:">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+      </svg>
+      <div class="ms-3">
+        {% if searching %}
+          Non sono state trovate
+          {% if request.GET.search %}
+            segnalazioni corrispondenti alla tua ricerca:
+            <strong>“{{ request.GET.search }}”</strong>.
+          {% else %}
+            {% include "map/_search_message.html" %}
+          {% endif %}
+          <br>
+          <a href="{% url 'list' %}" class="alert-link">Vedi tutte le segnalazioni</a>
+        {% else %}
+          Nulla da vedere qui.
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+  <!-- Paginazione -->
+  {% if is_paginated %}
+    {% include "_pagination.html" %}
+  {% endif %}
+{% endblock content %}
