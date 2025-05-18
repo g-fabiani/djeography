@@ -10,7 +10,7 @@ dependencies = [
     "django-leaflet @ git+https://github.com/g-fabiani/django-leaflet",
     "django-tinymce>=4.1.0",
 ]
-description = ""
+description = "A django application for participatory and activist cartography."
 readme = "README.md"
 requires-python= ">=3.10"
 authors = [
