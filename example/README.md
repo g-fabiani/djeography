@@ -19,4 +19,4 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-The map visible at [http://127.0.0.1:8000](http://127.0.0.1:8000) can be edited from the admin site at [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
+The map visible at [http://127.0.0.1:8000](http://127.0.0.1:8000) can be edited from the admin site at [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/).

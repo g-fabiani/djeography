@@ -1,6 +1,10 @@
 # Djeography
 
+Djeography is a  django application for participatory and activist cartography.
+
 ![Screenshot of the application](docs/img/map_screenshot.png)
+
+See an [example project](example/).
 
 ## Quick start
 Install `djeography`
@@ -57,4 +61,4 @@ LEAFLET_CONFIG = {
 ```
 Run `python manage.py migrate` to create the models in your database.
 
-Your map will be available at `127.0.0.1:8000/map/fullscreen/`
+Your map will be available at [http://127.0.0.1:8000/map/fullscreen/](http://127.0.0.1:8000/map/fullscreen/).
