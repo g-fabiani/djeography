@@ -1,5 +1,7 @@
 # Djeography
 
+![Screenshot of the application](docs/img/map_screenshot.png)
+
 ## Quick start
 Install `djeography`
 ```
