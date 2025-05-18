@@ -45,7 +45,7 @@ try:
 
 except (AssertionError, ImproperlyConfigured, KeyError):
     raise ImproperlyConfigured("""
-    DJEOGRAPHY_CONFIC['EVAL_LEVELS] should be a list of dictionaries.
+    DJEOGRAPHY_CONFIC['EVAL_LEVELS'] should be a list of dictionaries.
     For each evaluation level the following attributes are required:
         - 'db' a non empty string with length <= 3 (should be unique)
         - 'display' a string

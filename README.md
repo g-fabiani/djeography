@@ -55,4 +55,4 @@ LEAFLET_CONFIG = {
 ```
 Run `python manage.py migrate` to create the models in your database.
 
-Your map will be available at `127.0.0.1:8000/map/fullscreen`
+Your map will be available at `127.0.0.1:8000/map/fullscreen/`
