@@ -127,7 +127,7 @@ class EntityUnpublishView(LoginRequiredMixin, View):
 
 class GeoJSONLayerByCategoryView(GeoJSONLayerView):
     model = Address
-    properties = ('icon', 'evaluation')
+    properties = ('icon', 'evaluation', 'popupUrl')
     geometry_field = "coords"
 
     def get_queryset(self, **kwargs):

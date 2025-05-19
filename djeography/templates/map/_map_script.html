@@ -21,7 +21,7 @@
 
     function createPopup(feature) {
       el = document.createElement('div');
-      fetch(`/map/popup/${feature.id}/`)
+      fetch(feature.properties.popupUrl)
       .then(response => response.text())
       .then(html => {
         el.innerHTML = html;

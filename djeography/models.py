@@ -128,6 +128,10 @@ class Address(models.Model):
         verbose_name = "indirizzo"
         verbose_name_plural = "indirizzi"
 
+    @property
+    def popupUrl(self):
+        return reverse('djeography:popup', kwargs={"pk": self.pk})
+
 
 class Contact(models.Model):
     """
