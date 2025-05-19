@@ -1,13 +1,11 @@
   {% load leaflet_tags %}
   {% leaflet_map "map" %}
   {{ color_map | json_script:'colorMap' }}
+  {{ categories | json_script:'categories'}}
   <script>
     const colorMap = JSON.parse(document.getElementById('colorMap').textContent)
 
-    const categories = [
-    {% for cat in categories %}
-    {'cat': "{{ cat.name }}", 'url': "{% url 'djeography:data' cat.slug %}"},{% endfor %}
-    ];
+    const categories = JSON.parse(document.getElementById('categories').textContent)
 
     const clusterRadius = 40;
     const iconProps = {
@@ -32,15 +30,15 @@
       return el;
     }
 
-    function addMarkers(cat, url, markers, layerControl, map) {
+    function addMarkers(category, markers, layerControl, map) {
       const categorySubGroup = L.featureGroup.subGroup(markers);
-      layerControl.addOverlay(categorySubGroup, cat)
-      fetch(url)
+      layerControl.addOverlay(categorySubGroup, category.name)
+      fetch(category.url)
       .then((response) => response.json())
       .then((data) => {
         const layerGroup = L.geoJSON(data, {
           pointToLayer: (feature, latlng) => {
-            iconProps.icon = feature.properties.icon;
+            iconProps.icon = category.icon;
             iconProps.backgroundColor = colorMap[feature.properties.evaluation]??
                                             colorMap['default'];
             const icon = L.BeautifyIcon.icon(iconProps);
@@ -72,6 +70,6 @@
       })
       .addTo(map);
 
-      categories.map(({cat, url}) => addMarkers(cat, url, markers, layerControl, map));
+      categories.map((category) => addMarkers(category, markers, layerControl, map));
     })
   </script>

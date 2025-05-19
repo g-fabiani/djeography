@@ -127,14 +127,13 @@ class EntityUnpublishView(LoginRequiredMixin, View):
 
 class GeoJSONLayerByCategoryView(GeoJSONLayerView):
     model = Address
-    properties = ('icon', 'evaluation', 'popupUrl')
+    properties = ('evaluation', 'popupUrl')
     geometry_field = "coords"
 
     def get_queryset(self, **kwargs):
         queryset =  self.model.objects.filter(
             entity__category__slug=self.kwargs["slug"]
             ).annotate(
-                icon=F('entity__category__icon'),
                 evaluation=F('entity__evaluation'),
                 )
         if not self.request.user.is_authenticated:
@@ -147,7 +146,7 @@ class MapView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categories"] = Category.objects.all()
+        context["categories"] = [dict(name=cat.name, icon=cat.icon, url=cat.url) for cat in Category.objects.all()]
         context["color_map"] = COLOR_MAP
         return context
 

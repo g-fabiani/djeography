@@ -51,6 +51,10 @@ class Category(models.Model):
         verbose_name = "categoria"
         verbose_name_plural = "categorie"
 
+    @property
+    def url(self):
+        return reverse('djeography:data', kwargs={'slug': self.slug})
+
 
 class Entity(models.Model):
     """
