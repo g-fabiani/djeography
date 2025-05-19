@@ -2,9 +2,8 @@ from django.urls import path
 from .views import (EntityListView, EntityDetailView,
                     EntityPublishView, EntityUnpublishView,
                     GeoJSONLayerByCategoryView, MapView, PopupView)
-from django.views.generic import ListView
-from . models import Address, Category
 
+app_name = 'djeography'
 urlpatterns = [
     path('data/<slug:slug>.geojson', GeoJSONLayerByCategoryView.as_view(), name='data'),
     path('popup/<int:pk>/', PopupView.as_view(), name='popup'),

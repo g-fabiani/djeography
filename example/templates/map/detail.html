@@ -37,12 +37,12 @@
         {% if user.is_authenticated %}
           <div class="d-flex justify-content-center mt-4">
             {% if entity.published == False %}
-              <form action="{% url 'publish' entity.id %}" method="post">
+              <form action="{% url 'djeography:publish' entity.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-success">Pubblica</button>
               </form>
             {% else %}
-              <form action="{% url 'unpublish' entity.id %}" method="post">
+              <form action="{% url 'djeography:unpublish' entity.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-warning">Nascondi</button>
               </form>

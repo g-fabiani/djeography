@@ -6,7 +6,7 @@
 
     const categories = [
     {% for cat in categories %}
-    {'cat': "{{ cat.name }}", 'url': "{% url 'data' cat.slug %}"},{% endfor %}
+    {'cat': "{{ cat.name }}", 'url': "{% url 'djeography:data' cat.slug %}"},{% endfor %}
     ];
 
     const clusterRadius = 40;

@@ -62,7 +62,7 @@ class EntityModelTest(EntityPopulatedTestCase):
 
 class EntityViewEmptyTest(TestCase):
     def test_entity_list_view_url_by_name(self):
-        response = self.client.get(reverse('list'))
+        response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
 
     def test_entity_list_view_url_location(self):
@@ -70,17 +70,17 @@ class EntityViewEmptyTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_entity_list_view_template(self):
-        response = self.client.get(reverse('list'))
+        response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'map/list.html')
 
     def test_entity_list_view_queryset(self):
-        response = self.client.get(reverse('list'))
+        response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
         self.assertQuerySetEqual(response.context['entities'], [])
 
     def test_entity_list_view_search(self):
-        response = self.client.get(reverse('list'), {'search': 'test'})
+        response = self.client.get(reverse('djeography:list'), {'search': 'test'})
         self.assertEqual(response.status_code, 200)
 
 
@@ -90,7 +90,7 @@ class EntityViewPopulatedTest(EntityPopulatedTestCase):
         get_user_model().objects.create_user('test', password='test').save()
 
     def test_entity_list_view_url_by_name(self):
-        response = self.client.get(reverse('list'))
+        response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
 
     def test_entity_list_view_url_location(self):
@@ -98,23 +98,23 @@ class EntityViewPopulatedTest(EntityPopulatedTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_entity_list_view_template(self):
-        response = self.client.get(reverse('list'))
+        response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'map/list.html')
 
     def test_entity_list_view_queryset_unauth(self):
-        response = self.client.get(reverse('list'))
+        response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
         self.assertQuerySetEqual(response.context['entities'], [self.pub_entity])
 
     def test_entity_list_view_queryset_auth(self):
         self.client.login(username='test', password='test')
-        response = self.client.get(reverse('list'))
+        response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
         self.assertQuerySetEqual(response.context['entities'], [self.entity, self.pub_entity])
 
     def test_entity_list_view_published_entity_present(self):
-        response = self.client.get(reverse('list'))
+        response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
         self.assertInHTML(
             f'{self.pub_entity.title}',
@@ -122,7 +122,7 @@ class EntityViewPopulatedTest(EntityPopulatedTestCase):
 
     def test_entity_list_view_auth_unpublished_entity_present(self):
         self.client.login(username='test', password='test')
-        response = self.client.get(reverse('list'))
+        response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
         self.assertInHTML(
             f'{self.entity.title}',
@@ -130,13 +130,13 @@ class EntityViewPopulatedTest(EntityPopulatedTestCase):
         )
 
     def test_entity_list_view_search_present(self):
-        response = self.client.get(reverse('list'), {'search': 'test'})
+        response = self.client.get(reverse('djeography:list'), {'search': 'test'})
         self.assertEqual(response.status_code, 200)
         # There is a entity in the search results
         self.assertQuerySetEqual(response.context['entities'], [self.pub_entity])
 
     def test_entity_list_view_search_absent(self):
-        response = self.client.get(reverse('list'), {'search': 'zzz'})
+        response = self.client.get(reverse('djeography:list'), {'search': 'zzz'})
         self.assertEqual(response.status_code, 200)
         self.assertQuerySetEqual(response.context['entities'], [])
 
@@ -166,7 +166,7 @@ class EntityViewPopulatedTest(EntityPopulatedTestCase):
 class MapViewEmptyTest(TestCase):
 
     def test_map_view_url_by_name(self):
-        response = self.client.get(reverse('map_fullscreen'))
+        response = self.client.get(reverse('djeography:map_fullscreen'))
         self.assertEqual(response.status_code, 200)
 
     def test_map_view_url_location(self):
@@ -174,7 +174,7 @@ class MapViewEmptyTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_map_view_template(self):
-        response = self.client.get(reverse('map_fullscreen'))
+        response = self.client.get(reverse('djeography:map_fullscreen'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'map/map.html')
 
@@ -182,7 +182,7 @@ class MapViewEmptyTest(TestCase):
 class MapViewPopulatedTest(EntityPopulatedTestCase):
 
     def test_map_view_url_by_name(self):
-        response = self.client.get(reverse('map_fullscreen'))
+        response = self.client.get(reverse('djeography:map_fullscreen'))
         self.assertEqual(response.status_code, 200)
 
     def test_map_view_url_location(self):
@@ -190,7 +190,7 @@ class MapViewPopulatedTest(EntityPopulatedTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_map_view_template(self):
-        response = self.client.get(reverse('map_fullscreen'))
+        response = self.client.get(reverse('djeography:map_fullscreen'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'map/map.html')
 
@@ -203,7 +203,7 @@ class EntityPublishTest(EntityPopulatedTestCase):
 
     def test_publish_view_by_name(self):
         self.client.login(username='test', password='test')
-        response = self.client.post(reverse('publish', kwargs={'pk': self.entity.pk}))
+        response = self.client.post(reverse('djeography:publish', kwargs={'pk': self.entity.pk}))
         self.assertEqual(response.status_code, 302)
 
     def test_publish_view_by_location(self):
@@ -214,24 +214,24 @@ class EntityPublishTest(EntityPopulatedTestCase):
     def test_publish_has_effect(self):
         self.assertFalse(self.entity.published)
         self.client.login(username='test', password='test')
-        response = self.client.post(reverse('publish', kwargs={'pk': self.entity.pk}))
+        response = self.client.post(reverse('djeography:publish', kwargs={'pk': self.entity.pk}))
         self.assertEqual(response.status_code, 302)
         entity = Entity.objects.get(pk=self.entity.pk)
         self.assertTrue(entity.published)
 
     def test_publish_redirect_correct_page(self):
         self.client.login(username='test', password='test')
-        response = self.client.post(reverse('publish', kwargs={'pk': self.entity.pk}))
+        response = self.client.post(reverse('djeography:publish', kwargs={'pk': self.entity.pk}))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, self.entity.get_absolute_url())
 
     def test_publish_unauth_redirects_to_login(self):
-        response = self.client.post(reverse('publish', kwargs={'pk': self.entity.pk}))
+        response = self.client.post(reverse('djeography:publish', kwargs={'pk': self.entity.pk}))
         self.assertEqual(response.status_code, 302)
 
     def test_publish_view_get_405(self):
         self.client.login(username='test', password='test')
-        response = self.client.get(reverse('publish', kwargs={'pk': self.entity.pk}))
+        response = self.client.get(reverse('djeography:publish', kwargs={'pk': self.entity.pk}))
         self.assertEqual(response.status_code, 405)
 
 
@@ -242,7 +242,7 @@ class EntityUnpublishTest(EntityPopulatedTestCase):
 
     def test_unpublish_view_by_name(self):
         self.client.login(username='test', password='test')
-        response = self.client.post(reverse('unpublish', kwargs={'pk': self.pub_entity.pk}))
+        response = self.client.post(reverse('djeography:unpublish', kwargs={'pk': self.pub_entity.pk}))
         self.assertEqual(response.status_code, 302)
 
     def test_unpublish_view_by_location(self):
@@ -253,24 +253,24 @@ class EntityUnpublishTest(EntityPopulatedTestCase):
     def test_unpublish_has_effect(self):
         self.assertTrue(self.pub_entity.published)
         self.client.login(username='test', password='test')
-        response = self.client.post(reverse('unpublish', kwargs={'pk': self.pub_entity.pk}))
+        response = self.client.post(reverse('djeography:unpublish', kwargs={'pk': self.pub_entity.pk}))
         self.assertEqual(response.status_code, 302)
         entity = Entity.objects.get(pk=self.pub_entity.pk)
         self.assertFalse(entity.published)
 
     def test_unpublish_redirect_correct_page(self):
         self.client.login(username='test', password='test')
-        response = self.client.post(reverse('unpublish', kwargs={'pk': self.pub_entity.pk}))
+        response = self.client.post(reverse('djeography:unpublish', kwargs={'pk': self.pub_entity.pk}))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, self.pub_entity.get_absolute_url())
 
     def test_unpublish_unauth_redirects_to_login(self):
-        response = self.client.post(reverse('unpublish', kwargs={'pk': self.pub_entity.pk}))
+        response = self.client.post(reverse('djeography:unpublish', kwargs={'pk': self.pub_entity.pk}))
         self.assertEqual(response.status_code, 302)
 
     def test_unpublish_view_get_405(self):
         self.client.login(username='test', password='test')
-        response = self.client.get(reverse('unpublish', kwargs={'pk': self.pub_entity.pk}))
+        response = self.client.get(reverse('djeography:unpublish', kwargs={'pk': self.pub_entity.pk}))
         self.assertEqual(response.status_code, 405)
 
 

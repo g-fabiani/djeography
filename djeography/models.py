@@ -95,7 +95,7 @@ class Entity(models.Model):
         return f"{self.title} ({self.category})"
 
     def get_absolute_url(self):
-        return reverse("detail", kwargs={"pk": self.pk})
+        return reverse("djeography:detail", kwargs={"pk": self.pk})
 
     class Meta:
         verbose_name = "segnalazione"
