@@ -17,19 +17,6 @@
               textColor: "white"
             };
 
-    function createPopup(feature) {
-      el = document.createElement('div');
-      fetch(feature.properties.popupUrl)
-      .then(response => response.text())
-      .then(html => {
-        el.innerHTML = html;
-      })
-      .catch(error => {
-        console.error('Create Popup:', error);
-      });
-      return el;
-    }
-
     function addMarkers(category, markers, layerControl, map) {
       const categorySubGroup = L.featureGroup.subGroup(markers);
       layerControl.addOverlay(categorySubGroup, category.name)
@@ -42,8 +29,22 @@
             iconProps.backgroundColor = colorMap[feature.properties.evaluation]??
                                             colorMap['default'];
             const icon = L.BeautifyIcon.icon(iconProps);
-            return L.marker(latlng, {icon: icon})
-            .bindPopup(() => createPopup(feature), {minWidth: 250});
+            return L.marker(latlng, {icon: icon});
+          },
+          onEachFeature: (feature, layer) => {
+            const popup = L.popup({minWidth: 250});
+            layer.bindPopup(popup);
+            layer.on("click", (layer) => {
+              fetch(feature.properties.popupUrl)
+              .then((response) => response.text())
+              .then((html) => {
+                popup.setContent(html);
+                popup.update();
+              })
+              .catch(error => {
+                console.log("Creating popup:", error);
+              })
+            })
           }
         }).addTo(categorySubGroup);
         categorySubGroup.addTo(map);
