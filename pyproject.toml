@@ -12,6 +12,7 @@ dependencies = [
 ]
 description = "A django application for participatory and activist cartography."
 readme = "README.md"
+license = {file = "LICENSE"}
 requires-python= ">=3.10"
 authors = [
     {name = "Giulia Fabiani", email="giulia.fabiani01@gmail.com"}
@@ -34,3 +35,7 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
+
+[project.urls]
+Repository = "https://github.com/g-fabiani/djeography"
+Issues = "https://github.com/g-fabiani/djeography/issues"
