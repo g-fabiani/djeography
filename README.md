@@ -4,7 +4,7 @@ Djeography is a  django application for participatory and activist cartography.
 
 ![Screenshot of the application](docs/img/map_screenshot.png)
 
-See an [example project](example/).
+See an [example project](example/) and/or check out a [demo](https://gfabiani4.eu.pythonanywhere.com).
 
 ## Quick start
 Install `djeography`
