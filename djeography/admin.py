@@ -1,9 +1,11 @@
 from typing import Any
+
 from django.contrib import admin
 from django.db.models.query import QuerySet
 from django.http import HttpRequest
-from .models import Category, Entity, Address, Contact, Report
 from leaflet.admin import LeafletGeoAdminMixin
+
+from .models import Address, Category, Contact, Entity, Report
 
 # Register your models here.
 
@@ -39,7 +41,7 @@ class EntityAdmin(admin.ModelAdmin):
     inlines = [
         AddressInline,
         ContactInline,
-        ReportInline
+        ReportInline,
     ]
 
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:

@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'djeography',
 
     # my apps
-    'pages'
+    'pages',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +63,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates", ],
+        'DIRS': [BASE_DIR / "templates" ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,7 +85,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
 }
 
 
@@ -144,20 +144,20 @@ LEAFLET_CONFIG = {
         },
         'beautify-marker': {
             'js': 'map/beautifymarker/leaflet-beautify-marker-icon.js',
-            'css': 'map/beautifymarker/leaflet-beautify-marker-icon.css'
+            'css': 'map/beautifymarker/leaflet-beautify-marker-icon.css',
         },
         'control-geocoder': {
             'js': 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js',
             'css': 'https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css',
-            'auto-include': True
+            'auto-include': True,
         },
         'marker-cluster': {
             'js': 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js',
             'css': ['https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css',
-                    'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css']
+                    'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css'],
         },
         'featuregroup-subgroup': {
-            'js': 'https://unpkg.com/leaflet.featuregroup.subgroup@1.0.2/dist/leaflet.featuregroup.subgroup.js'
-        }
-    }
+            'js': 'https://unpkg.com/leaflet.featuregroup.subgroup@1.0.2/dist/leaflet.featuregroup.subgroup.js',
+        },
+    },
 }
