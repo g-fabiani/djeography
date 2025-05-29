@@ -10,9 +10,9 @@ from django.views.decorators.clickjacking import xframe_options_sameorigin
 from django.views.generic import DetailView, ListView, TemplateView, View
 from djgeojson.views import GeoJSONLayerView
 
-from djeography import COLOR_MAP, EVAL_LEVELS, app_settings
+from djeography import app_settings
 
-from .models import Address, Category, Entity, Report
+from .models import Address, Category, Entity, EvaluationLevel, Report
 
 
 class EntityListView(ListView):
@@ -76,7 +76,9 @@ class EntityListView(ListView):
         # Dati per la creazione del form
         context['provinces'] = dict(app_settings['PROV_CHOICES'])
         context['categories'] = {cat.slug: cat for cat in Category.objects.all()}
-        context['evaluations'] = dict(EVAL_LEVELS)
+        context['evaluations'] = {
+            level.short_name: level.full_name for level in EvaluationLevel.objects.all()
+        }
         context['searching'] = self.searching
 
         return context
@@ -156,7 +158,10 @@ class MapView(TemplateView):
             {'name': cat.name, 'icon': cat.icon, 'url': cat.url}
             for cat in Category.objects.all()
         ]
-        context['color_map'] = COLOR_MAP
+        context['color_map'] = dict(
+            {level.short_name: level.color for level in EvaluationLevel.objects.all()},
+            default=app_settings.get('DEFAULT_MARKER_COLOR'),
+        )
         return context
 
     @xframe_options_sameorigin
