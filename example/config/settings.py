@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'leaflet',
     'tinymce',
     'djeography',
-    # my apps
-    'pages',
 ]
 
 MIDDLEWARE = [
