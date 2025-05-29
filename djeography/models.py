@@ -5,7 +5,7 @@ from django.utils import timezone
 from djgeojson.fields import PointField
 from tinymce import models as tinymce_models
 
-from djeography import EVAL_LEVELS, app_settings
+from djeography import app_settings
 
 
 class EntityManager(models.Manager):
@@ -63,6 +63,36 @@ class Category(models.Model):
         return reverse('djeography:data', kwargs={'slug': self.slug})
 
 
+class EvaluationLevel(models.Model):
+    """
+    Models the evaluation levels.
+
+    Evaluation levels are defined in the database in order to
+    allow for user customization.
+    """
+
+    short_name = models.CharField(verbose_name='id', max_length=3, primary_key=True)
+    full_name = models.CharField(
+        verbose_name='nome',
+        max_length=32,
+        null=False,
+        unique=True,
+    )
+    color = models.CharField(
+        verbose_name='colore',
+        max_length=32,
+        null=False,
+        unique=True,
+    )
+
+    class Meta:
+        verbose_name = 'Livello di valutazione'
+        verbose_name_plural = 'Livelli di valutazione'
+
+    def __str__(self) -> str:
+        return self.full_name
+
+
 class Entity(models.Model):
     """
     Modella le segnalazioni.
@@ -77,12 +107,19 @@ class Entity(models.Model):
     """
 
     category = models.ForeignKey(
-        Category, on_delete=models.RESTRICT, verbose_name='categoria', null=False,
+        Category,
+        on_delete=models.RESTRICT,
+        verbose_name='categoria',
+        null=False,
     )
     title = models.CharField('titolo', max_length=60)
     description = tinymce_models.HTMLField('info', null=False, blank=True)
-    evaluation = models.CharField(
-        'valutazione', choices=EVAL_LEVELS, max_length=3, null=False, blank=True,
+    evaluation = models.ForeignKey(
+        EvaluationLevel,
+        on_delete=models.RESTRICT,
+        verbose_name='valutazione',
+        null=True,
+        blank=True,
     )
     published = models.BooleanField('pubblicata', default=False)
 
@@ -127,7 +164,9 @@ class Address(models.Model):
     number = models.CharField('numero civico', max_length=20, null=False, blank=True)
     city = models.CharField('città', max_length=60)
     province = models.CharField(
-        'provincia', max_length=2, choices=app_settings['PROV_CHOICES'],
+        'provincia',
+        max_length=2,
+        choices=app_settings['PROV_CHOICES'],
     )
     coords = PointField()
     entity = models.ForeignKey(Entity, on_delete=models.CASCADE)

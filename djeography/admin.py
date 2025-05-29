@@ -5,7 +5,7 @@ from django.db.models.query import QuerySet
 from django.http import HttpRequest
 from leaflet.admin import LeafletGeoAdminMixin
 
-from .models import Address, Category, Contact, Entity, Report
+from .models import Address, Category, Contact, Entity, EvaluationLevel, Report
 
 # Register your models here.
 
@@ -13,6 +13,7 @@ from .models import Address, Category, Contact, Entity, Report
 class AddressInline(LeafletGeoAdminMixin, admin.StackedInline):
     model = Address
     extra = 1
+
 
 class ContactInline(admin.TabularInline):
     model = Contact
@@ -23,6 +24,7 @@ class ReportInline(admin.StackedInline):
     model = Report
     extra = 0
 
+
 @admin.register(Entity)
 class EntityAdmin(admin.ModelAdmin):
     model = Entity
@@ -30,13 +32,13 @@ class EntityAdmin(admin.ModelAdmin):
     change_form_template = 'map/change_form.html'
 
     # List view
-    list_display = ["title", "category", "evaluation", "published"]
-    list_filter = ["category", "published", "evaluation"]
-    search_fields = ["title", "address__city"]
-    actions = ["publish", "unpublish"]
+    list_display = ['title', 'category', 'evaluation', 'published']
+    list_filter = ['category', 'published', 'evaluation']
+    search_fields = ['title', 'address__city']
+    actions = ['publish', 'unpublish']
 
     # Detail view
-    fields = ["category", ("title", "evaluation"), "description"]
+    fields = ['category', ('title', 'evaluation'), 'description']
 
     inlines = [
         AddressInline,
@@ -47,14 +49,20 @@ class EntityAdmin(admin.ModelAdmin):
     def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
         return self.model.objects.all()
 
-    @admin.action(description="Pubblica le segnalazioni selezionate")
+    @admin.action(description='Pubblica le segnalazioni selezionate')
     def publish(self, request, queryset):
         queryset.update(published=True)
 
-    @admin.action(description="Nascondi le segnalazioni selezionate")
+    @admin.action(description='Nascondi le segnalazioni selezionate')
     def unpublish(self, request, queryset):
         queryset.update(published=False)
 
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    exclude = ["slug"]
+    exclude = ['slug']
+
+
+@admin.register(EvaluationLevel)
+class EvaluationLevelAdmin(admin.ModelAdmin):
+    pass

@@ -2,8 +2,6 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from djeography import EVAL_LEVELS
-
 from .models import Address, Category, Contact, Entity
 
 # Create your tests here.
@@ -16,14 +14,12 @@ class EntityPopulatedTestCase(TestCase):
         self.entity = Entity.objects.create(
             category=self.cat,
             title='Test title',
-            evaluation=EVAL_LEVELS[0][0],
             description='Some description',
         )
 
         self.pub_entity = Entity.objects.create(
             category=self.cat,
             title='Second test title',
-            evaluation=EVAL_LEVELS[1][0],
             description='Some description',
             published=True,
         )
@@ -32,10 +28,6 @@ class EntityPopulatedTestCase(TestCase):
 class EntityModelTest(EntityPopulatedTestCase):
     def test_entity_title(self):
         self.assertEqual(f'{self.entity.title}', 'Test title')
-
-    def test_entity_evaluation(self):
-        self.assertEqual(f'{self.entity.evaluation}', EVAL_LEVELS[0][0])
-        self.assertEqual(f'{self.entity.get_evaluation_display()}', EVAL_LEVELS[0][1])
 
     def test_entity_description(self):
         self.assertEqual(self.entity.description, 'Some description')
@@ -112,7 +104,8 @@ class EntityViewPopulatedTest(EntityPopulatedTestCase):
         response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
         self.assertQuerySetEqual(
-            response.context['entities'], [self.entity, self.pub_entity],
+            response.context['entities'],
+            [self.entity, self.pub_entity],
         )
 
     def test_entity_list_view_published_entity_present(self):

@@ -1,5 +1,5 @@
   <div class="card-header entity-header py-3
-  text-bg-{% if  entity.evaluation == "POS" %}success{% elif entity.evaluation == "MIX" %}warning{% elif entity.evaluation == "NEG" %}danger{% else %}secondary{% endif %}
+  text-bg-{% if  entity.evaluation.short_name == "POS" %}success{% elif entity.evaluation.short_name == "MIX" %}warning{% elif entity.evaluation.short_name == "NEG" %}danger{% else %}secondary{% endif %}
   {% if entity.published == False %}draft{% endif %}">
         <div class="row">
           <div class="col-10">
