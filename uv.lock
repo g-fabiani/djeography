@@ -62,7 +62,7 @@ wheels = [
 
 [[package]]
 name = "djeography"
-version = "2025.5"
+version = "2025.5.1"
 source = { editable = "." }
 dependencies = [
     { name = "django-geojson" },
