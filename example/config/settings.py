@@ -37,13 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # djeography and dependencies
     'djgeojson',
     'leaflet',
     'tinymce',
     'djeography',
-
     # my apps
     'pages',
 ]
@@ -63,7 +61,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates" ],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -138,10 +136,6 @@ LEAFLET_CONFIG = {
     'MAX_ZOOM': 19,
     'RESET_VIEW': False,
     'PLUGINS': {
-        'awesome-markers': {
-            'js': 'https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js',
-            'css': 'https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css',
-        },
         'beautify-marker': {
             'js': 'map/beautifymarker/leaflet-beautify-marker-icon.js',
             'css': 'map/beautifymarker/leaflet-beautify-marker-icon.css',
@@ -153,8 +147,10 @@ LEAFLET_CONFIG = {
         },
         'marker-cluster': {
             'js': 'https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js',
-            'css': ['https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css',
-                    'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css'],
+            'css': [
+                'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css',
+                'https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css',
+            ],
         },
         'featuregroup-subgroup': {
             'js': 'https://unpkg.com/leaflet.featuregroup.subgroup@1.0.2/dist/leaflet.featuregroup.subgroup.js',

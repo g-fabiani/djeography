@@ -35,10 +35,6 @@ LEAFLET_CONFIG = {
     'MAX_ZOOM': 19,
     'RESET_VIEW': False,
     'PLUGINS': {
-        'awesome-markers': {
-            'js': 'https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js',
-            'css': 'https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css',
-        },
         'beautify-marker': {
             'js': 'map/beautifymarker/leaflet-beautify-marker-icon.js',
             'css': 'map/beautifymarker/leaflet-beautify-marker-icon.css'
