@@ -39,7 +39,17 @@ class Category(models.Model):
     """Modella le categorie per le segnalazioni."""
 
     name = models.CharField('nome', max_length=60)
-    icon = models.CharField('icona', max_length=20, blank=True, null=False)
+    icon = models.CharField(
+        'icona',
+        max_length=20,
+        blank=True,
+        null=False,
+        help_text=(
+            "inserisci il nome di un'icona da "
+            '<a href="https://fontawesome.com/search?ic=free" target="_blank">'
+            'https://fontawesome.com/search?ic=free</a>'
+        ),
+    )
 
     # Lo slug server per filtrare le segnalazioni sulla base delle categorie
     slug = models.SlugField(null=False, unique=True)
