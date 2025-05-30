@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Address, Category, Contact, Entity
+from djeography.models import Address, Category, Contact, Entity
 
 # Create your tests here.
 
