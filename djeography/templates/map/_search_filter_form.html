@@ -1,0 +1,36 @@
+<form class="form-floating" method="get">
+  <input type="text"
+         class="form-control"
+         id="search"
+         name="search"
+         placeholder="Search">
+  <label for="search">Cerca</label>
+</form>
+<hr>
+<form action="" method="get">
+  <div>
+    <label for="province">Provincia</label>
+    <select class="form-select mb-3" id="province" name="province">
+      <option value="">Scegli una provincia</option>
+      {% for key, value in provinces.items %}<option {% if key == request.GET.province %}selected{% endif %} value="{{ key }}">{{ value }}</option>{% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="category">Categoria</label>
+    <select class="form-select mb-3" id="category" name="category">
+      <option selected value="">Scegli una categoria</option>
+      {% for key, value in categories.items %}<option {% if key == request.GET.category %}selected{% endif %} value="{{ key }}">{{ value }}</option>{% endfor %}
+    </select>
+  </div>
+  <div>
+    <label for="evaluation">Valutazione</label>
+    <select class="form-select mb-3" id="evaluation" name="evaluation">
+      <option selected value="">Scegli un livello di valutazione</option>
+      {% for key, value in evaluations.items %}<option {% if key == request.GET.evaluation %}selected{% endif %} value="{{ key }}">{{ value }}</option>{% endfor %}
+    </select>
+  </div>
+  <div>
+    <input type="submit" class="btn btn-primary" value="Filtra">
+    <a class="btn btn-danger" href="{% url "djeography:list" %}">Annulla selezione</a>
+  </div>
+</form>

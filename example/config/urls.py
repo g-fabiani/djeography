@@ -16,15 +16,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 
 """
+
 from django.contrib import admin
 from django.urls import include, path
-from pages.views import HomePageView
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
     # include djeography urls
     path('map/', include('djeography.urls')),
     # urls from my applications
-    path('', HomePageView.as_view(), name='home'),
+    path('', TemplateView.as_view(template_name='homepage.html'), name='home'),
 ]
