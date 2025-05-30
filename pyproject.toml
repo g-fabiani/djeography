@@ -39,3 +39,8 @@ classifiers = [
 [project.urls]
 Repository = "https://github.com/g-fabiani/djeography"
 Issues = "https://github.com/g-fabiani/djeography/issues"
+
+[dependency-groups]
+dev = [
+    "nox>=2025.5.1",
+]
