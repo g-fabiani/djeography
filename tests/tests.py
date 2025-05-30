@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from djeography.models import Address, Category, Contact, Entity
+from djeography.models import Address, Category, Contact, Entity, EvaluationLevel
 
 # Create your tests here.
 
@@ -319,3 +319,25 @@ class TelephoneTest(EntityPopulatedTestCase):
 
         self.assertContains(response, self.phone_dash.contact)
         self.assertContains(response, f'tel:{phone_stripped}')
+
+
+class EvaluationDataMigrationTest(TestCase):
+    def test_evaluation_levels_present(self):
+        count = EvaluationLevel.objects.count()
+        self.assertEqual(count, 3)
+
+    def test_evaluation_level_positive(self):
+        eval_level = EvaluationLevel.objects.get(short_name='POS')
+        self.assertEqual(eval_level.full_name, 'Positiva')
+
+    def test_evaluation_level_mixed(self):
+        eval_level = EvaluationLevel.objects.get(short_name='MIX')
+        self.assertEqual(eval_level.full_name, 'Mista')
+
+    def test_evaluation_level_negative(self):
+        eval_level = EvaluationLevel.objects.get(short_name='NEG')
+        self.assertEqual(eval_level.full_name, 'Negativa')
+
+    def test_evaluation_level_does_not_exist(self):
+        with self.assertRaises(EvaluationLevel.DoesNotExist):
+            EvaluationLevel.objects.get(short_name='1')
