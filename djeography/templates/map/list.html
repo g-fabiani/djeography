@@ -1,8 +1,22 @@
 {% extends "_base.html" %}
+{% block sidebar %}
+  <div class="col-lg-3 px-md-3 py-4 navbar-expand-lg">
+    <button class="navbar-toggler"
+            data-bs-toggle="collapse"
+            data-bs-target="#secondary-nav"
+            role="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-search" aria-hidden="true" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg> Cerca o filtra</button>
+    <nav class="collapse py-4 d-lg-block" id="secondary-nav">
+      {% include "map/_search_filter_form.html" %}
+    </nav>
+  </div>
+{% endblock sidebar %}
 {% block content %}
   {% if entities %}
     {% if searching %}
-      <div class="alert alert-info mt-5 d-flex align-items-center" role="alert">
+      <div class="alert alert-info d-flex align-items-center" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg"
              width="24"
              height="24"
@@ -30,8 +44,7 @@
             <!-- Card body -->
             <div class="card-body">
               <h2 class="my-0 fw-normal card-title entity-title mb-4">
-                <a href="{{ entity.get_absolute_url }}"
-                   class="stretched-link">{{ entity.title }}</a>
+                <a href="{{ entity.get_absolute_url }}" class="stretched-link">{{ entity.title }}</a>
               </h2>
               <div class="card-text">
                 <div class="px-0">
@@ -55,17 +68,17 @@
                 {% endif %}
               </div>
             </div>
-              {% if entity.n_reports > 0 %}
-                <!-- Card footer -->
-                <div class="card-footer text-body-secondary">
-                  <small>Testimonianza più recente:
-                    <time datetime="{{ entity.latest_update | date:'c' }}">
-                      {{ entity.latest_update|date:'j F Y' }}
-                    </time>
-                    <a href="">Leggi ({{ entity.n_reports }})</a>
-                  </small>
-                </div>
-              {% endif %}
+            {% if entity.n_reports > 0 %}
+              <!-- Card footer -->
+              <div class="card-footer text-body-secondary">
+                <small>Testimonianza più recente:
+                  <time datetime="{{ entity.latest_update | date:'c' }}">
+                    {{ entity.latest_update|date:'j F Y' }}
+                  </time>
+                  <a href="">Leggi ({{ entity.n_reports }})</a>
+                </small>
+              </div>
+            {% endif %}
           </article>
         </div>
       {% endfor %}

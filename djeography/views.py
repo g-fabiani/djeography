@@ -71,7 +71,6 @@ class EntityListView(ListView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Segnalazioni'
 
         # Dati per la creazione del form
         context['provinces'] = dict(app_settings['PROV_CHOICES'])
