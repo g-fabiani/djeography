@@ -2,14 +2,15 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from djeography.models import Address, Category, Contact, Entity, EvaluationLevel
+from djeography import app_settings
+from djeography.models import Category, Contact, Entity, EvaluationLevel
 
 # Create your tests here.
 
 
 class EntityPopulatedTestCase(TestCase):
     def setUp(self) -> None:
-        """Make an unpublished and a published entity."""
+        """Make an unpublished and a published entity and a user."""
         self.cat = Category.objects.create(name='test')
         self.entity = Entity.objects.create(
             category=self.cat,
@@ -23,6 +24,9 @@ class EntityPopulatedTestCase(TestCase):
             description='Some description',
             published=True,
         )
+
+        super().setUp()
+        get_user_model().objects.create_user('test', password='test').save()
 
 
 class EntityModelTest(EntityPopulatedTestCase):
@@ -52,7 +56,7 @@ class EntityModelTest(EntityPopulatedTestCase):
         self.assertEqual(Entity.objects.count(), 2)
 
 
-class EntityViewEmptyTest(TestCase):
+class EntityListEmptyTest(TestCase):
     def test_entity_list_view_url_by_name(self):
         response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
@@ -76,11 +80,7 @@ class EntityViewEmptyTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class EntityViewPopulatedTest(EntityPopulatedTestCase):
-    def setUp(self) -> None:
-        super().setUp()
-        get_user_model().objects.create_user('test', password='test').save()
-
+class EntityListPopulatedTest(EntityPopulatedTestCase):
     def test_entity_list_view_url_by_name(self):
         response = self.client.get(reverse('djeography:list'))
         self.assertEqual(response.status_code, 200)
@@ -133,6 +133,34 @@ class EntityViewPopulatedTest(EntityPopulatedTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertQuerySetEqual(response.context['entities'], [])
 
+    def test_entity_list_pagination(self):
+        for i in range(app_settings['PAGINATION']):
+            Entity.objects.create(
+                category=self.cat,
+                title=f'test title {i}',
+                description='Some description',
+                published=True,
+            )
+
+        response = self.client.get(reverse('djeography:list'), {'page': '2'})
+        self.assertEqual(response.status_code, 200)
+
+    def test_entity_list_pagination_when_searching(self):
+        for i in range(app_settings['PAGINATION']):
+            Entity.objects.create(
+                category=self.cat,
+                title=f'test title {i}',
+                description='Some description',
+                published=True,
+            )
+        response = self.client.get(
+            reverse('djeography:list'),
+            {'page': '2', 'search': 'test'},
+        )
+        self.assertEqual(response.status_code, 200)
+
+
+class EntityDetailTest(EntityPopulatedTestCase):
     def test_published_detail_view_by_name(self):
         response = self.client.get(self.pub_entity.get_absolute_url())
         self.assertEqual(response.status_code, 200)
@@ -187,10 +215,6 @@ class MapViewPopulatedTest(EntityPopulatedTestCase):
 
 
 class EntityPublishTest(EntityPopulatedTestCase):
-    def setUp(self) -> None:
-        super().setUp()
-        get_user_model().objects.create_user('test', password='test')
-
     def test_publish_view_by_name(self):
         self.client.login(username='test', password='test')
         response = self.client.post(
@@ -236,10 +260,6 @@ class EntityPublishTest(EntityPopulatedTestCase):
 
 
 class EntityUnpublishTest(EntityPopulatedTestCase):
-    def setUp(self) -> None:
-        super().setUp()
-        get_user_model().objects.create_user(username='test', password='test')
-
     def test_unpublish_view_by_name(self):
         self.client.login(username='test', password='test')
         response = self.client.post(
@@ -295,14 +315,6 @@ class TelephoneTest(EntityPopulatedTestCase):
         self.phone_dash = Contact.objects.create(
             typology='P',
             contact='331-7436495',
-            entity=self.pub_entity,
-        )
-
-        # We need an address for the entity to be displayed on the map
-        Address.objects.create(
-            city='Pisa',
-            province='PI',
-            coords={'type': 'Point', 'coordinates': [0, 0]},
             entity=self.pub_entity,
         )
 
