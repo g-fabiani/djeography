@@ -134,7 +134,7 @@ class EntityUnpublishView(LoginRequiredMixin, View):
 
 class GeoJSONLayerByCategoryView(GeoJSONLayerView):
     model = Address
-    properties = ('evaluation', 'popupUrl')
+    properties = ('evaluation', 'published', 'popupUrl')
     geometry_field = 'coords'
 
     def get_queryset(self, **kwargs):
@@ -142,6 +142,7 @@ class GeoJSONLayerByCategoryView(GeoJSONLayerView):
             entity__category__slug=self.kwargs['slug'],
         ).annotate(
             evaluation=F('entity__evaluation'),
+            published=F('entity__published')
         )
         if not self.request.user.is_authenticated:
             return queryset.filter(entity__published=True)

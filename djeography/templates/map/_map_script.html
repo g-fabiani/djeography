@@ -28,6 +28,9 @@
             iconProps.icon = category.icon;
             iconProps.backgroundColor = colorMap[feature.properties.evaluation]??
                                             colorMap['default'];
+            if (!feature.properties.published) {
+              iconProps.customClasses = "draft";
+            }
             const icon = L.BeautifyIcon.icon(iconProps);
             return L.marker(latlng, {icon: icon});
           },
