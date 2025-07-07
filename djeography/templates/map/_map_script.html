@@ -30,6 +30,8 @@
                                             colorMap['default'];
             if (!feature.properties.published) {
               iconProps.customClasses = "draft";
+            } else {
+              iconProps.customClasses = "";
             }
             const icon = L.BeautifyIcon.icon(iconProps);
             return L.marker(latlng, {icon: icon});
