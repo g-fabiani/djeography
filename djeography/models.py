@@ -19,7 +19,7 @@ class EntityManager(models.Manager):
         return (
             super()
             .get_queryset()
-            .select_related('category')
+            .select_related('category', 'evaluation')
             .prefetch_related('address_set', 'contact_set')
         )
 
