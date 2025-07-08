@@ -3,7 +3,6 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
 from djgeojson.fields import PointField
-from tinymce import models as tinymce_models
 
 from djeography import app_settings
 
@@ -123,7 +122,7 @@ class Entity(models.Model):
         null=False,
     )
     title = models.CharField('titolo', max_length=60)
-    description = tinymce_models.HTMLField('info', null=False, blank=True)
+    description = models.TextField('info', null=False, blank=True)
     evaluation = models.ForeignKey(
         EvaluationLevel,
         on_delete=models.RESTRICT,
@@ -224,7 +223,7 @@ class Report(models.Model):
 
     entity = models.ForeignKey(Entity, on_delete=models.CASCADE)
     title = models.CharField('titolo', max_length=100, null=False)
-    body = tinymce_models.HTMLField('testo', null=False, blank=True)
+    body = models.TextField('testo', null=False, blank=True)
     date_added = models.DateField('data', default=timezone.now)
 
     class Meta:
