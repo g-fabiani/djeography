@@ -36,11 +36,6 @@ class EntityListView(ListView):
         else:
             queryset = self.model.published_objects.all()
 
-        queryset = queryset.annotate(
-            latest_update=Max('report__date_added'),
-            n_reports=Count('report'),
-        )
-
         # Filtri e ricerca
         province_filter = self.request.GET.get('province')
         category_filter = self.request.GET.get('category')
@@ -52,7 +47,7 @@ class EntityListView(ListView):
         )
 
         if search:
-            # Vedi https://docs.djangoproject.com/en/5.0/topics/db/search/
+            # Vedi https://docs.djangoproject.com/en/5.2/topics/db/search/
             # per documentazione sulle funzioni di ricerca
             queryset = queryset.filter(
                 Q(address__city__icontains=search) | Q(title__icontains=search),
@@ -67,7 +62,15 @@ class EntityListView(ListView):
             if evaluation_filter:
                 queryset = queryset.filter(evaluation=evaluation_filter)
 
-        return queryset.order_by('published', F('latest_update').desc(nulls_last=True), 'id')
+        # Aggiungi numero di testimonianze e testimonianza più recente
+        queryset = queryset.annotate(
+            latest_update=Max('report__date_added'),
+            n_reports=Count('report', distinct=True),
+        )
+
+        return queryset.order_by(
+            'published', F('latest_update').desc(nulls_last=True), 'id'
+        )
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -140,10 +143,7 @@ class GeoJSONLayerByCategoryView(GeoJSONLayerView):
     def get_queryset(self, **kwargs):
         queryset = self.model.objects.filter(
             entity__category__slug=self.kwargs['slug'],
-        ).annotate(
-            evaluation=F('entity__evaluation'),
-            published=F('entity__published')
-        )
+        ).annotate(evaluation=F('entity__evaluation'), published=F('entity__published'))
         if not self.request.user.is_authenticated:
             return queryset.filter(entity__published=True)
         return queryset
