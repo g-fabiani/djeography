@@ -67,7 +67,7 @@ class EntityListView(ListView):
             if evaluation_filter:
                 queryset = queryset.filter(evaluation=evaluation_filter)
 
-        return queryset.order_by('published', F('latest_update').desc(nulls_last=True))
+        return queryset.order_by('published', F('latest_update').desc(nulls_last=True), 'id')
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
