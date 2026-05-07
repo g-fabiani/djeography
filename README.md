@@ -9,7 +9,7 @@ See an [example project](example/) and/or check out a [demo](https://gfabiani4.e
 ## Quick start
 1. Install `djeography`
     ```
-    $ pip install git+https://github.com/g-fabiani/djeography
+    pip install git+https://github.com/g-fabiani/djeography
     ```
 2. Add `djeography` and its dependencies to `INSTALLED_APPS` in `settings.py` for your project:
     ```
@@ -26,7 +26,7 @@ See an [example project](example/) and/or check out a [demo](https://gfabiani4.e
     path('map/', include('djeography.urls')),
     ```
 
-4. Add configurations for `django-leaflet`
+4. Add configurations for `django-leaflet`. Here provide a sample configuration centered on Italy and using OpenStreetMap tiles.
     ```
     LEAFLET_CONFIG = {
         'FORCE_IMAGE_PATH': True,
@@ -34,6 +34,16 @@ See an [example project](example/) and/or check out a [demo](https://gfabiani4.e
         'DEFAULT_ZOOM': 6,
         'MAX_ZOOM': 19,
         'RESET_VIEW': False,
+        'TILES': [
+            (
+                'OSM',
+                '//tile.openstreetmap.org/{z}/{x}/{y}.png',
+                {
+                    'attribution': '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    'referrerPolicy': 'strict-origin',
+                },
+            ),
+        ],
         'PLUGINS': {
             'beautify-marker': {
                 'js': 'map/beautifymarker/leaflet-beautify-marker-icon.js',
@@ -55,6 +65,12 @@ See an [example project](example/) and/or check out a [demo](https://gfabiani4.e
         }
     }
     ```
+> [!IMPORTANT]
+> You can adapt these configurations as you like, but always include the plugins we specified: they are necessary for the application to work correctly.
+
+> [!WARNING]
+> [OpenStreetMap tile usage policy](https://operations.osmfoundation.org/policies/tiles/) requires you to send the HTTP `Referrer` header with each tile request. When using OSM tiles, your `ReferrerPolicy` should be one of `no-referrer-when-downgrade`, `origin`, `origin-when-cross-origin`, `strict-origin`, `strict-origin-when-cross-origin`. You should also always include attribution and licensing.
+
 5. Run `python manage.py migrate` to create the models in your database.
 
 6. Your map will be available at [http://127.0.0.1:8000/map/fullscreen/](http://127.0.0.1:8000/map/fullscreen/).

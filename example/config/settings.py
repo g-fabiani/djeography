@@ -133,6 +133,16 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM': 6,
     'MAX_ZOOM': 19,
     'RESET_VIEW': False,
+    'TILES': [
+        (
+            'OSM',
+            '//tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                'attribution': '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                'referrerPolicy': 'strict-origin',
+            },
+        ),
+    ],
     'PLUGINS': {
         'beautify-marker': {
             'js': 'map/beautifymarker/leaflet-beautify-marker-icon.js',
