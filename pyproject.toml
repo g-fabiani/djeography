@@ -15,7 +15,7 @@ readme = "README.md"
 license = {file = "LICENSE"}
 requires-python= ">=3.10"
 authors = [
-    {name = "Giulia Fabiani", email="giulia.fabiani01@gmail.com"}
+    {name = "Giulia Fabiani", email="giulia.fabiani@proton.me"}
 ]
 
 classifiers = [
